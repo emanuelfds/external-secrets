@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eso-demo
+  labels:
+    app.kubernetes.io/part-of: external-secrets-operator
+    app.kubernetes.io/component: examples

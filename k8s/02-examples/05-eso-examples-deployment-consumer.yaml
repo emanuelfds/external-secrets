@@ -1,0 +1,53 @@
+# -----------------------------------------------------------------------------
+# Exemplo 4: aplicacao consumindo o Secret gerado pelo ExternalSecret "app-config".
+#
+# O Secret "app-config" e criado/atualizado pelo ESO a partir do Vaultwarden.
+# A anotacao do Reloader (ja presente no cluster) reinicia o pod quando o
+# Secret muda apos um refresh do ESO.
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-consumer
+  namespace: eso-demo
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-consumer
+  template:
+    metadata:
+      labels:
+        app: demo-consumer
+    spec:
+      containers:
+        - name: app
+          image: busybox:1.36
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Secrets injetados via envFrom (valores nao sao ecoados):";
+              echo "DB_USER definido? $( [ -n \"$DB_USER\" ] && echo sim || echo nao )";
+              echo "JWT_SECRET definido? $( [ -n \"$JWT_SECRET\" ] && echo sim || echo nao )";
+              sleep 3600
+          envFrom:
+            - secretRef:
+                name: app-config          # gerado pelo ExternalSecret app-config
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
