@@ -1,4 +1,5 @@
 <div align="center">
+  <a id="top"></a>
   <img src="images/eso-logo.png" alt="External Secrets Operator" width="150" />
 
   <h1>External Secrets Operator × Vaultwarden API</h1>
@@ -712,3 +713,7 @@ O comando acima testa apenas `/health`, que não exige a API key. Nunca coloque 
 ## Licença
 
 Distribuído sob a licença MIT. Consulte [`LICENSE`](LICENSE) para os termos completos.
+
+<p align="center">
+  <a href="#top">↑ Voltar ao topo</a>
+</p>
